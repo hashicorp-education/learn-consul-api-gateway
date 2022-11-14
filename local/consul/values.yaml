@@ -7,15 +7,13 @@ global:
   name: consul
   # The name of the datacenter that the agents should register as.
   datacenter: dc1
-  image: hashicorppreview/consul:1.14-dev
-  imageK8S: hashicorppreview/consul-k8s-control-plane:1.0.0-dev
   # Enables TLS across the cluster to verify authenticity of the Consul servers and clients.
   tls:
     enabled: true
   # Enables ACLs across the cluster to secure access to data and APIs.
-  # acls:
+  acls:
     # If true, automatically manage ACL tokens and policies for all Consul components.
-    # manageSystemACLs: true
+    manageSystemACLs: true
 # Configures values that configure the Consul server cluster.
 server:
   enabled: true
@@ -35,8 +33,7 @@ controller:
   enabled: true
 apiGateway:
   enabled: true
-  # image: "hashicorp/consul-api-gateway:0.5.0"
-  image: "hashicorppreview/consul-api-gateway:0.5-dev-90b4ad8f46c37f1f3120116744d74ffd7cf1e165"
+  image: "hashicorp/consul-api-gateway:0.4.0"
   managedGatewayClass:
     serviceType: NodePort
     useHostPorts: true
