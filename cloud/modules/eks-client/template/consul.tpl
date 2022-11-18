@@ -28,12 +28,6 @@ externalServers:
 server:
   enabled: false
 
-connectInject:
-  enabled: true
-
-controller:
-  enabled: true
-
 apiGateway:
   enabled: true
   image: "hashicorp/consul-api-gateway:${api_gateway_version}"
