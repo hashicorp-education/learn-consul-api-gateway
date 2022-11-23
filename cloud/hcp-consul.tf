@@ -1,6 +1,6 @@
 module "aws_hcp_consul" {
   source  = "hashicorp/hcp-consul/aws"
-  version = "~> 0.6.1"
+  version = "~> 0.8.8"
 
   hvn                = hcp_hvn.main
   vpc_id             = module.vpc.vpc_id
@@ -30,15 +30,14 @@ resource "hcp_consul_cluster_root_token" "token" {
 module "eks_consul_client" {
   source = "./modules/eks-client"
 
-  cluster_id       = hcp_consul_cluster.main.cluster_id
-  consul_hosts     = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["retry_join"]
-  k8s_api_endpoint = module.eks.cluster_endpoint
-  consul_version   = hcp_consul_cluster.main.consul_version
-
   boostrap_acl_token    = hcp_consul_cluster_root_token.token.secret_id
+  cluster_id       = hcp_consul_cluster.main.cluster_id
   consul_ca_file        = base64decode(hcp_consul_cluster.main.consul_ca_file)
+  consul_hosts          = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["retry_join"]
+  consul_version        = hcp_consul_cluster.main.consul_version
   datacenter            = hcp_consul_cluster.main.datacenter
   gossip_encryption_key = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
+  k8s_api_endpoint      = module.eks.cluster_endpoint
 
   # The EKS node group will fail to create if the clients are
   # created at the same time. This forces the client to wait until
