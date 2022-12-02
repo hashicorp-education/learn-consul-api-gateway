@@ -12,14 +12,14 @@ module "aws_hcp_consul" {
 resource "random_string" "cluster_id" {
   length  = 6
   special = false
-  upper = false
+  upper   = false
 }
 
 resource "hcp_consul_cluster" "main" {
-  cluster_id      = local.cluster_id
-  hvn_id          = hcp_hvn.main.hvn_id
-  public_endpoint = true
-  tier            = var.consul_tier
+  cluster_id         = local.cluster_id
+  hvn_id             = hcp_hvn.main.hvn_id
+  public_endpoint    = true
+  tier               = var.consul_tier
   min_consul_version = var.consul_version
 }
 
@@ -27,11 +27,18 @@ resource "hcp_consul_cluster_root_token" "token" {
   cluster_id = hcp_consul_cluster.main.id
 }
 
+resource "kubernetes_namespace" "consul" {
+  metadata {
+    name = "consul"
+  }
+}
+
+
 module "eks_consul_client" {
   source = "./modules/eks-client"
 
   boostrap_acl_token    = hcp_consul_cluster_root_token.token.secret_id
-  cluster_id       = hcp_consul_cluster.main.cluster_id
+  cluster_id            = hcp_consul_cluster.main.cluster_id
   consul_ca_file        = base64decode(hcp_consul_cluster.main.consul_ca_file)
   consul_hosts          = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["retry_join"]
   consul_version        = hcp_consul_cluster.main.consul_version
@@ -42,5 +49,5 @@ module "eks_consul_client" {
   # The EKS node group will fail to create if the clients are
   # created at the same time. This forces the client to wait until
   # the node group is successfully created.
-  depends_on = [module.eks]
+  depends_on = [module.eks, kubernetes_namespace.consul]
 }
