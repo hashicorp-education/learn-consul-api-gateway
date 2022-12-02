@@ -14,9 +14,6 @@ global:
     caCert:
       secretName: ${cluster_id}-hcp
       secretKey: caCert
-  gossipEncryption:
-    secretName: ${cluster_id}-hcp
-    secretKey: gossipEncryptionKey
 
 externalServers:
   enabled: true
@@ -27,12 +24,6 @@ externalServers:
 
 server:
   enabled: false
-
-connectInject:
-  enabled: true
-
-controller:
-  enabled: true
 
 apiGateway:
   enabled: true

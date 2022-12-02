@@ -25,8 +25,9 @@ locals {
       {
         name = local.kubeconfig_context
         context = {
-          cluster = local.kubeconfig_context
-          user    = local.kubeconfig_context
+          cluster   = local.kubeconfig_context
+          user      = local.kubeconfig_context
+          namespace = "consul"
         }
       }
     ]
@@ -38,11 +39,11 @@ provider "kustomization" {
   context        = local.kubeconfig_context
 }
 
-data "kustomization" "gateway_crds" {
+data "kustomization_build" "gateway_crds" {
   path = "github.com/hashicorp/consul-api-gateway/config/crd?ref=v${var.api_gateway_version}"
 }
 
 resource "kustomization_resource" "gateway_crds" {
-  for_each = data.kustomization.gateway_crds.ids
-  manifest = data.kustomization.gateway_crds.manifests[each.value]
+  for_each = data.kustomization_build.gateway_crds.ids
+  manifest = data.kustomization_build.gateway_crds.manifests[each.value]
 }

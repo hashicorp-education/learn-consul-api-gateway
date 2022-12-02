@@ -1,7 +1,7 @@
-
 resource "kubernetes_secret" "consul_secrets" {
   metadata {
     name = "${var.cluster_id}-hcp"
+    namespace  = "consul"
   }
 
   data = {
@@ -18,6 +18,7 @@ resource "helm_release" "consul" {
   repository = "https://helm.releases.hashicorp.com"
   version    = var.chart_version
   chart      = "consul"
+  namespace  = "consul"
 
   values = [
     templatefile("${path.module}/template/consul.tpl", {

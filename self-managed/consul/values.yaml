@@ -25,15 +25,9 @@ ui:
   # Registers a Kubernetes Service for the Consul UI as a NodePort.
   service:
     type: NodePort
-# Configures and installs the automatic Consul Connect sidecar injector.
-connectInject:
-  enabled: true
-# Configures and installs the Consul controller for managing custom resources.
-controller:
-  enabled: true
 apiGateway:
   enabled: true
-  image: "hashicorp/consul-api-gateway:0.4.0"
+  image: "hashicorp/consul-api-gateway:0.5.1"
   managedGatewayClass:
     serviceType: NodePort
     useHostPorts: true
