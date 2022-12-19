@@ -1,8 +1,7 @@
 variable "cluster_id" {
   type        = string
   description = "The name of your HCP Consul cluster"
-  default     = "hcp-learn"
-  # default = "learn-hcp-apigw"
+  default     = "learn-apigw"
 }
 
 variable "vpc_region" {
