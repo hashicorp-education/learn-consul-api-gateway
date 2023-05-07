@@ -12,7 +12,7 @@
     2. Consul K8S:
     `consul-k8s install -config-file=consul/config.yaml -set global.image=hashicorp/consul:1.13.1`
 8. `kubectl apply --filename two-services`
-9.  `kubectl apply --filename api-gw/consul-api-gateway.yaml --namespace consul && kubectl wait --for=condition=ready gateway/api-gateway --namespace consul --timeout=90s && kubectl apply --filename api-gw/routes.yaml --namespace consul` 
+9.  `kubectl apply --filename api-gw/consul-api-gateway.yaml --namespace consul && kubectl wait --for=condition=ready gateway/api-gateway --namespace consul --timeout=90s && kubectl apply --filename api-gw/routes.yaml --namespace consul && kubectl apply --filename api-gw/referencegrant.yaml`
 10.  `kubectl port-forward svc/consul-ui --namespace consul 6443:443`
 11. Visit the following urls in the browser
     1.  [https://localhost:6443/ui/](https://localhost:6443/ui/)
