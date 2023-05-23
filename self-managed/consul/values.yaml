@@ -1,5 +1,7 @@
 # Contains values that affect multiple components of the chart.
 global:
+  image: "hashicorp/consul:1.15.2"
+  imageK8S: "hashicorp/consul-k8s-control-plane:1.1.1"
   # The main enabled/disabled setting.
   # If true, servers, clients, Consul DNS and the Consul UI will be enabled.
   enabled: true
@@ -27,7 +29,7 @@ ui:
     type: NodePort
 apiGateway:
   enabled: true
-  image: "hashicorp/consul-api-gateway:0.5.1"
+  image: "hashicorp/consul-api-gateway:0.5.4"
   managedGatewayClass:
     serviceType: NodePort
     useHostPorts: true
