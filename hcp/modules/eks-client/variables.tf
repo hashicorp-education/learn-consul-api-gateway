@@ -41,11 +41,11 @@ variable "consul_version" {
 variable "chart_version" {
   type        = string
   description = "The Consul Helm chart version to use"
-  default     = "1.0.1"
+  default     = "1.1.1"
 }
 
 variable "api_gateway_version" {
   type        = string
   description = "The Consul API gateway image version to use"
-  default     = "0.5.1"
+  default     = "0.5.4"
 }

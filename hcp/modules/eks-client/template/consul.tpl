@@ -25,6 +25,15 @@ externalServers:
 server:
   enabled: false
 
+connectInject:
+  transparentProxy:
+    defaultEnabled: true
+  enabled: true
+  default: true
+  consulNode:
+    meta:
+      terraform-module: "hcp-eks-client"
+
 apiGateway:
   enabled: true
   image: "hashicorp/consul-api-gateway:${api_gateway_version}"

@@ -17,20 +17,72 @@ data "aws_eks_cluster_auth" "cluster" {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "17.22.0"
+  version = "18.26.6"
 
-  cluster_name    = "${local.cluster_id}-eks"
-  cluster_version = "1.21"
-  subnets         = module.vpc.public_subnets
+  cluster_name    = "apigw-eks"
+  cluster_version = "1.26"
+
+  cluster_addons = {
+    aws-ebs-csi-driver = { most_recent = true }
+  }
+
+  subnet_ids      = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
 
-  node_groups = {
-    nodes = {
-      name_prefix      = "${local.cluster_id}-node"
-      instance_types   = ["t3a.medium"]
-      desired_capacity = 3
-      max_capacity     = 3
-      min_capacity     = 3
+  eks_managed_node_group_defaults = {
+    ami_type = "AL2_x86_64"
+
+    # Needed by the aws-ebs-csi-driver
+    iam_role_additional_policies = [
+      "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+    ]
+  }
+
+  eks_managed_node_groups = {
+    one = {
+      name = "apigw-node"
+
+      instance_types = ["t3a.medium"]
+
+      min_size     = 1
+      max_size     = 3
+      desired_size = 2
+    }
+  }
+
+  node_security_group_additional_rules = {
+
+    # # Allow all outgoing communication
+    # egress_all = {
+    #   description      = "Node all egress"
+    #   protocol         = "-1"
+    #   from_port        = 0
+    #   to_port          = 0
+    #   type             = "egress"
+    #   cidr_blocks      = ["0.0.0.0/0"]
+    #   ipv6_cidr_blocks = ["::/0"]
+    # }
+
+    # EKS Cluster API to Consul API webhooks
+    ingress_webhooks = {
+      description = "Consul webhook API"
+      protocol = "tcp"
+      from_port = 8080
+      to_port = 8080
+      type = "ingress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # Consul Dataplane communication
+    egress_grpc = {
+      description      = "Consul gRPC"
+      protocol         = "tcp"
+      from_port        = 8502
+      to_port          = 8503
+      type             = "egress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
     }
   }
 }
