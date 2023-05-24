@@ -86,3 +86,18 @@ module "eks" {
     }
   }
 }
+
+resource "kubernetes_secret" "consul_secrets" {
+  metadata {
+    name = "${hcp_consul_cluster.main.datacenter}-hcp"
+    namespace  = "consul"
+  }
+
+  data = {
+    caCert              = base64decode(hcp_consul_cluster.main.consul_ca_file)
+    gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
+    bootstrapToken      = hcp_consul_cluster_root_token.token.secret_id
+  }
+
+  type = "Opaque"
+}

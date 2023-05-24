@@ -33,21 +33,27 @@ resource "kubernetes_namespace" "consul" {
   }
 }
 
+# resource "local_file" "consul-helm-values" {
+#   filename = "yamls/consul-helm-values.yaml"
+#   content  = templatefile("template/consul.tpl", {
+#       datacenter       = hcp_consul_cluster.main.datacenter,
+#       consul_hosts     = hcp_consul_cluster.main.consul_private_endpoint_url,
+#       cluster_id       = hcp_consul_cluster.main.datacenter,
+#       k8s_api_endpoint = module.eks.cluster_endpoint,
+#       consul_version   = substr(hcp_consul_cluster.main.consul_version, 1, -1),
+#       api_gateway_version = var.api_gateway_version,
+#     }
+#   )
+# }
 
-module "eks_consul_client" {
-  source = "./modules/eks-client"
-
-  boostrap_acl_token    = hcp_consul_cluster_root_token.token.secret_id
-  cluster_id            = hcp_consul_cluster.main.cluster_id
-  consul_ca_file        = base64decode(hcp_consul_cluster.main.consul_ca_file)
-  consul_hosts          = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["retry_join"]
-  consul_version        = hcp_consul_cluster.main.consul_version
-  datacenter            = hcp_consul_cluster.main.datacenter
-  gossip_encryption_key = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
-  k8s_api_endpoint      = module.eks.cluster_endpoint
-
-  # The EKS node group will fail to create if the clients are
-  # created at the same time. This forces the client to wait until
-  # the node group is successfully created.
-  depends_on = [module.eks, kubernetes_namespace.consul]
-}
+# resource "local_file" "hcp-consul-secrets" {
+#   filename = "yamls/consul-secrets.yaml"
+#   content  = templatefile("template/consul.tpl", {
+#       name       = hcp_consul_cluster.main.datacenter
+#       namespace = "consul"
+#       bootstrapToken = hcp_consul_cluster_root_token.token.secret_id
+#       caCert = base64decode(hcp_consul_cluster.main.consul_ca_file)
+#       gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
+#     }
+#   )
+# }
