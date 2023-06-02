@@ -14,7 +14,7 @@ metadata:
   name: echo-2
 spec:
   ports:
-  - port: 8090
+  - port: 8092
     name: high
     protocol: TCP
     targetPort: 8080
