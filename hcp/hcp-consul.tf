@@ -35,7 +35,7 @@ resource "kubernetes_namespace" "consul" {
 
 resource "local_file" "consul-helm-values" {
   filename = "consul/values.yaml"
-  content  = templatefile("template/consul.tpl", {
+  content  = templatefile("consul/helm-chart.tpl", {
       datacenter       = hcp_consul_cluster.main.datacenter,
       consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
       cluster_id       = hcp_consul_cluster.main.datacenter,
@@ -48,7 +48,7 @@ resource "local_file" "consul-helm-values" {
 
 resource "local_file" "consul-helm-api-gw" {
   filename = "consul/values-api-gw.yaml"
-  content  = templatefile("template/consul.tpl", {
+  content  = templatefile("consul/helm-chart.tpl", {
       datacenter       = hcp_consul_cluster.main.datacenter,
       consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
       cluster_id       = hcp_consul_cluster.main.datacenter,
