@@ -34,8 +34,10 @@ connectInject:
     meta:
       terraform-module: "hcp-eks-client"
 
+%{if api_gateway_version != "" }
 apiGateway:
   enabled: true
   image: "hashicorp/consul-api-gateway:${api_gateway_version}"
   managedGatewayClass:
     serviceType: LoadBalancer
+%{ endif }

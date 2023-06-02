@@ -33,27 +33,28 @@ resource "kubernetes_namespace" "consul" {
   }
 }
 
-# resource "local_file" "consul-helm-values" {
-#   filename = "yamls/consul-helm-values.yaml"
-#   content  = templatefile("template/consul.tpl", {
-#       datacenter       = hcp_consul_cluster.main.datacenter,
-#       consul_hosts     = hcp_consul_cluster.main.consul_private_endpoint_url,
-#       cluster_id       = hcp_consul_cluster.main.datacenter,
-#       k8s_api_endpoint = module.eks.cluster_endpoint,
-#       consul_version   = substr(hcp_consul_cluster.main.consul_version, 1, -1),
-#       api_gateway_version = var.api_gateway_version,
-#     }
-#   )
-# }
+resource "local_file" "consul-helm-values" {
+  filename = "consul/values.yaml"
+  content  = templatefile("template/consul.tpl", {
+      datacenter       = hcp_consul_cluster.main.datacenter,
+      consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
+      cluster_id       = hcp_consul_cluster.main.datacenter,
+      k8s_api_endpoint = module.eks.cluster_endpoint,
+      consul_version   = substr(hcp_consul_cluster.main.consul_version, 1, -1),
+      api_gateway_version = "", # disables the API gateway section
+    }
+  )
+}
 
-# resource "local_file" "hcp-consul-secrets" {
-#   filename = "yamls/consul-secrets.yaml"
-#   content  = templatefile("template/consul.tpl", {
-#       name       = hcp_consul_cluster.main.datacenter
-#       namespace = "consul"
-#       bootstrapToken = hcp_consul_cluster_root_token.token.secret_id
-#       caCert = base64decode(hcp_consul_cluster.main.consul_ca_file)
-#       gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
-#     }
-#   )
-# }
+resource "local_file" "consul-helm-api-gw" {
+  filename = "consul/values-api-gw.yaml"
+  content  = templatefile("template/consul.tpl", {
+      datacenter       = hcp_consul_cluster.main.datacenter,
+      consul_hosts     = trim(hcp_consul_cluster.main.consul_private_endpoint_url, "https://"),
+      cluster_id       = hcp_consul_cluster.main.datacenter,
+      k8s_api_endpoint = module.eks.cluster_endpoint,
+      consul_version   = substr(hcp_consul_cluster.main.consul_version, 1, -1),
+      api_gateway_version = var.api_gateway_version,
+    }
+  )
+}
