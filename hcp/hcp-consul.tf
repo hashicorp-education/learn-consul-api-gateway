@@ -27,12 +27,6 @@ resource "hcp_consul_cluster_root_token" "token" {
   cluster_id = hcp_consul_cluster.main.id
 }
 
-resource "kubernetes_namespace" "consul" {
-  metadata {
-    name = "consul"
-  }
-}
-
 resource "local_file" "consul-helm-values" {
   filename = "consul/values.yaml"
   content  = templatefile("consul/helm-chart.tpl", {

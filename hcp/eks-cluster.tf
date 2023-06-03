@@ -19,7 +19,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "18.26.6"
 
-  cluster_name    = "apigw-eks"
+  cluster_name    = local.cluster_id
   cluster_version = "1.26"
 
   cluster_addons = {
@@ -87,6 +87,14 @@ module "eks" {
   }
 }
 
+resource "kubernetes_namespace" "consul" {
+  metadata {
+    name = "consul"
+  }
+
+  depends_on = [ module.eks ]
+}
+
 resource "kubernetes_secret" "consul_secrets" {
   metadata {
     name = "${hcp_consul_cluster.main.datacenter}-hcp"
@@ -100,4 +108,6 @@ resource "kubernetes_secret" "consul_secrets" {
   }
 
   type = "Opaque"
+
+  depends_on = [ module.eks ]
 }

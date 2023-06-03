@@ -46,4 +46,6 @@ data "kustomization_build" "gateway_crds" {
 resource "kustomization_resource" "gateway_crds" {
   for_each = data.kustomization_build.gateway_crds.ids
   manifest = data.kustomization_build.gateway_crds.manifests[each.value]
+
+  depends_on = [ module.eks ]
 }
