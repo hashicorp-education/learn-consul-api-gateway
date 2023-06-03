@@ -2,11 +2,12 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
-  name: example-route-1
-  namespace: consul
+  name: route-hashicups-lb
+  namespace: default
 spec:
   parentRefs:
   - name: api-gateway
+    namespace: consul
   rules:
   - matches:
     - path:
@@ -14,31 +15,52 @@ spec:
         value: /echo
     backendRefs:
     - kind: Service
-      name: echo-1
+      name: frontend-v1
       namespace: default
-      port: 8080
+      port: 80
       weight: 50
     - kind: Service
-      name: echo-2
+      name: frontend-v2
       namespace: default
-      port: 8090
+      port: 80
       weight: 50
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
 metadata:
-  name: example-route-2
-  namespace: consul
+  name: route-hashicups-v1
+  namespace: default
 spec:
   parentRefs:
   - name: api-gateway
+    namespace: consul
   rules:
   - matches:
     - path:
         type: PathPrefix
-        value: /
+        value: /v1
     backendRefs:
     - kind: Service
-      name: nginx
+      name: frontend-v1
+      namespace: default
+      port: 80
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: route-hashicups-v2
+  namespace: default
+spec:
+  parentRefs:
+  - name: api-gateway
+    namespace: consul
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /v2
+    backendRefs:
+    - kind: Service
+      name: frontend-v2
       namespace: default
       port: 80

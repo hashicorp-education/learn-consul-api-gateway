@@ -2,29 +2,29 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  name: frontend-v1
   namespace: default
   labels:
-    app: frontend
+    app: frontend-v1
 spec:
   type: ClusterIP
   ports:
     - port: 3000
       targetPort: 3000
   selector:
-    app: frontend
+    app: frontend-v1
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: frontend
+  name: frontend-v1
   namespace: default
 automountServiceAccountToken: true
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
 metadata:
-  name: frontend
+  name: frontend-v1
   namespace: default
 spec:
   protocol: "http"
@@ -32,31 +32,35 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: frontend-v1
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      service: frontend
-      app: frontend
+      service: frontend-v1
+      app: frontend-v1
   template:
     metadata:
       labels:
-        service: frontend
-        app: frontend
+        service: frontend-v1
+        app: frontend-v1
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9102"
         consul.hashicorp.com/connect-inject: "true"
+        consul.hashicorp.com/connect-service-upstreams: "public-api:8080"
+        consul.hashicorp.com/service-meta-version: "v1"
     spec:
-      serviceAccountName: frontend
+      serviceAccountName: frontend-v1
       containers:
-        - name: frontend
-          image: hashicorpdemoapp/frontend:v1.0.2
+        - name: frontend-v1
+          image: hashicorpdemoapp/frontend:v1.0.9
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:
             - name: NEXT_PUBLIC_PUBLIC_API_URL
               value: "/"
+            - name: NEXT_PUBLIC_FOOTER_FLAG
+              value: "HashiCups-v1"
