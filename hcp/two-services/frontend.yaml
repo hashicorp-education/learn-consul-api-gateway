@@ -10,6 +10,7 @@ spec:
   ports:
     - port: 3000
       targetPort: 3000
+      protocol: TCP
   selector:
     app: frontend
 ---
@@ -46,9 +47,9 @@ data:
         index  index.html index.htm;
       }
 
-      location /api {
-        proxy_pass http://public-api:8080;
-      }
+      #location /api {
+      #  proxy_pass http://public-api:8080;
+      #}
     }
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
@@ -56,7 +57,7 @@ kind: ServiceDefaults
 metadata:
   name: frontend
 spec:
-  protocol: "http"
+  protocol: http
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -74,10 +75,10 @@ spec:
         service: frontend
         app: frontend
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/service-meta-version: "v1"
+        'prometheus.io/scrape': 'true'
+        'prometheus.io/port': '9102'
+        'consul.hashicorp.com/connect-inject': 'true'
+        'consul.hashicorp.com/service-meta-version': 'v1'
     spec:
       serviceAccountName: frontend
       containers:

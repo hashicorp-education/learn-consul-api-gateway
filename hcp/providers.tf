@@ -10,15 +10,15 @@ terraform {
     }
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = ">= 2.4.1"
+      version = "~> 2.14.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.3.0"
+      version = "~> 2.7.0"
     }
     kubectl = {
       source  = "gavinbunney/kubectl"
-      version = ">= 1.11.3"
+      version = "~> 1.14.0"
     }
     kustomization = {
       source  = "kbst/kustomization"
@@ -26,13 +26,17 @@ terraform {
     }
     consul = {
       source  = "hashicorp/consul"
-      version = "~> 2.14"
+      version = "~> 2.17"
     }
     random = {
       source  = "hashicorp/random"
       version = ">= 2"
     }
   }
+
+  provider_meta "hcp" {
+    module_name = "hcp-consul"
+  }  
 }
 
 provider "aws" {
