@@ -26,8 +26,8 @@ module "eks" {
     aws-ebs-csi-driver = { most_recent = true }
   }
 
-  subnet_ids      = module.vpc.public_subnets
-  vpc_id          = module.vpc.vpc_id
+  subnet_ids = module.vpc.public_subnets
+  vpc_id     = module.vpc.vpc_id
 
   eks_managed_node_group_defaults = {
     ami_type = "AL2_x86_64"
@@ -52,38 +52,71 @@ module "eks" {
 
   node_security_group_additional_rules = {
 
-    # # Allow all outgoing communication
-    # egress_all = {
-    #   description      = "Node all egress"
-    #   protocol         = "-1"
-    #   from_port        = 0
-    #   to_port          = 0
-    #   type             = "egress"
-    #   cidr_blocks      = ["0.0.0.0/0"]
-    #   ipv6_cidr_blocks = ["::/0"]
-    # }
-
-    # EKS Cluster API to Consul API webhooks
-    ingress_webhooks = {
-      description = "Consul webhook API"
-      protocol = "tcp"
-      from_port = 8080
-      to_port = 8080
-      type = "ingress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-
-    # Consul Dataplane communication
-    egress_grpc = {
-      description      = "Consul gRPC"
-      protocol         = "tcp"
-      from_port        = 8502
-      to_port          = 8503
+    # Allow all outgoing communication
+    egress_all = {
+      description      = "Node all egress"
+      protocol         = "-1"
+      from_port        = 0
+      to_port          = 0
       type             = "egress"
       cidr_blocks      = ["0.0.0.0/0"]
       ipv6_cidr_blocks = ["::/0"]
     }
+
+    # EKS Cluster API to Consul API webhooks
+    ingress_webhooks = {
+      description      = "Consul webhook API"
+      protocol         = "tcp"
+      from_port        = 8080
+      to_port          = 8080
+      type             = "ingress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # API services on ports 9090
+    ingress_9090 = {
+      description      = "API services"
+      protocol         = "tcp"
+      from_port        = 9090
+      to_port          = 9090
+      type             = "ingress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # API services on ports 3000
+    ingress_3000 = {
+      description      = "API services"
+      protocol         = "tcp"
+      from_port        = 3000
+      to_port          = 3000
+      type             = "ingress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # API services on port 5432
+    ingress_5432 = {
+      description      = "API services"
+      protocol         = "tcp"
+      from_port        = 5432
+      to_port          = 5432
+      type             = "ingress"
+      cidr_blocks      = ["0.0.0.0/0"]
+      ipv6_cidr_blocks = ["::/0"]
+    }
+
+    # # Consul Dataplane communication
+    # egress_grpc = {
+    #   description      = "Consul gRPC"
+    #   protocol         = "tcp"
+    #   from_port        = 8502
+    #   to_port          = 8503
+    #   type             = "egress"
+    #   cidr_blocks      = ["0.0.0.0/0"]
+    #   ipv6_cidr_blocks = ["::/0"]
+    # }
   }
 }
 
@@ -92,13 +125,13 @@ resource "kubernetes_namespace" "consul" {
     name = "consul"
   }
 
-  depends_on = [ module.eks ]
+  depends_on = [module.eks]
 }
 
 resource "kubernetes_secret" "consul_secrets" {
   metadata {
-    name = "${hcp_consul_cluster.main.datacenter}-hcp"
-    namespace  = "consul"
+    name      = "${hcp_consul_cluster.main.datacenter}-hcp"
+    namespace = "consul"
   }
 
   data = {
@@ -109,5 +142,5 @@ resource "kubernetes_secret" "consul_secrets" {
 
   type = "Opaque"
 
-  depends_on = [ module.eks ]
+  depends_on = [module.eks]
 }
