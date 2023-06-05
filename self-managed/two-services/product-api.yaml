@@ -26,7 +26,7 @@ metadata:
   name: product-api
   namespace: default
 spec:
-  protocol: "http"
+  protocol: http
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -36,7 +36,7 @@ metadata:
 data:
   config: |
     {
-      "db_connection": "host=localhost port=5432 user=postgres password=password dbname=products sslmode=disable",
+      "db_connection": "host=product-api-db port=5432 user=postgres password=password dbname=products sslmode=disable",
       "bind_address": ":9090",
       "metrics_address": ":9103"
     }
@@ -58,10 +58,9 @@ spec:
       labels:
         app: product-api
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/connect-service-upstreams: "product-api-db:5432"
+        'prometheus.io/scrape': 'true'
+        'prometheus.io/port': '9102'
+        'consul.hashicorp.com/connect-inject': 'true'
     spec:
       serviceAccountName: product-api
       volumes:
@@ -81,14 +80,14 @@ spec:
           env:
             - name: "CONFIG_FILE"
               value: "/config/conf.json"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 9090
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
-            periodSeconds: 10
-            failureThreshold: 30
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 9090
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 1
+          #   periodSeconds: 10
+          #   failureThreshold: 30
           volumeMounts:
             - name: config
               mountPath: /config

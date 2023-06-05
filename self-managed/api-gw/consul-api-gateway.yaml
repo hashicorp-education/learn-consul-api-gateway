@@ -12,7 +12,7 @@ spec:
     name: https
     allowedRoutes:
       namespaces:
-        from: Same
+        from: All
     tls:
       certificateRefs:
         - name: consul-server-cert
