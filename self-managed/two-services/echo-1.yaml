@@ -17,7 +17,6 @@ metadata:
 spec:
   ports:
   - port: 3000
-    name: high
     protocol: TCP
     targetPort: 3000
   selector:
