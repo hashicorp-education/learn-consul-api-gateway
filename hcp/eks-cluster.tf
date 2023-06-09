@@ -63,71 +63,16 @@ module "eks" {
       ipv6_cidr_blocks = ["::/0"]
     }
 
-    # EKS Cluster API to Consul API webhooks
-    ingress_webhooks = {
-      description      = "Consul webhook API"
-      protocol         = "tcp"
-      from_port        = 8080
-      to_port          = 8080
+    # allow from any
+    ingress_all = {
+      description      = "allow ingress from any"
+      protocol         = "-1"
+      from_port        = 0
+      to_port          = 0
       type             = "ingress"
       cidr_blocks      = ["0.0.0.0/0"]
       ipv6_cidr_blocks = ["::/0"]
     }
-
-    # API services on ports 9090
-    ingress_9090 = {
-      description      = "API services"
-      protocol         = "tcp"
-      from_port        = 9090
-      to_port          = 9090
-      type             = "ingress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-
-    # API services on ports 3000
-    ingress_3000 = {
-      description      = "API services"
-      protocol         = "tcp"
-      from_port        = 3000
-      to_port          = 3000
-      type             = "ingress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-
-    # API services on port 5432
-    ingress_5432 = {
-      description      = "API services"
-      protocol         = "tcp"
-      from_port        = 5432
-      to_port          = 5432
-      type             = "ingress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-
-    # API services on port 80
-    ingress_80 = {
-      description      = "API services"
-      protocol         = "tcp"
-      from_port        = 80
-      to_port          = 80
-      type             = "ingress"
-      cidr_blocks      = ["0.0.0.0/0"]
-      ipv6_cidr_blocks = ["::/0"]
-    }
-
-    # # Consul Dataplane communication
-    # egress_grpc = {
-    #   description      = "Consul gRPC"
-    #   protocol         = "tcp"
-    #   from_port        = 8502
-    #   to_port          = 8503
-    #   type             = "egress"
-    #   cidr_blocks      = ["0.0.0.0/0"]
-    #   ipv6_cidr_blocks = ["::/0"]
-    # }
   }
 }
 
