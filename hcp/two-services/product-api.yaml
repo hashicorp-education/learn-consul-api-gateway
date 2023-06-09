@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: product-api
+  namespace: default
 spec:
   selector:
     app: product-api
@@ -16,19 +17,22 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: product-api
+  namespace: default
 automountServiceAccountToken: true
 ---
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
 metadata:
   name: product-api
+  namespace: default
 spec:
-  protocol: "http"
+  protocol: http
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: db-configmap
+  namespace: default
 data:
   config: |
     {
@@ -41,6 +45,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: product-api
+  namespace: default
   labels:
     app: product-api
 spec:
@@ -53,10 +58,9 @@ spec:
       labels:
         app: product-api
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/connect-service-upstreams: "product-api-db:5432"
+        'prometheus.io/scrape': 'true'
+        'prometheus.io/port': '9102'
+        'consul.hashicorp.com/connect-inject': 'true'
     spec:
       serviceAccountName: product-api
       volumes:
@@ -76,14 +80,14 @@ spec:
           env:
             - name: "CONFIG_FILE"
               value: "/config/conf.json"
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: 9090
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
-            periodSeconds: 10
-            failureThreshold: 30
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 9090
+          #   initialDelaySeconds: 15
+          #   timeoutSeconds: 1
+          #   periodSeconds: 10
+          #   failureThreshold: 30
           volumeMounts:
             - name: config
               mountPath: /config

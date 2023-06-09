@@ -16,8 +16,7 @@ metadata:
   namespace: default
 spec:
   ports:
-  - port: 8080
-    name: high
+  - port: 3000
     protocol: TCP
     targetPort: 3000
   selector:

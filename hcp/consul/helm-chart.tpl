@@ -17,16 +17,27 @@ global:
 
 externalServers:
   enabled: true
-  hosts: ${consul_hosts}
+  hosts: [${consul_hosts}]
   httpsPort: 443
   useSystemRoots: true
-  k8sAuthMethodHost: ${k8s_api_endpoint}
+  k8sAuthMethodHost: ${k8s_api_endpoint}:443
 
 server:
   enabled: false
 
+connectInject:
+  transparentProxy:
+    defaultEnabled: true
+  enabled: true
+  default: true
+  consulNode:
+    meta:
+      terraform-module: "hcp-eks-client"
+
+%{if api_gateway_version != "" }
 apiGateway:
   enabled: true
   image: "hashicorp/consul-api-gateway:${api_gateway_version}"
   managedGatewayClass:
     serviceType: LoadBalancer
+%{ endif }

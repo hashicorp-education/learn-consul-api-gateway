@@ -37,11 +37,11 @@ variable "consul_tier" {
 variable "consul_version" {
   type        = string
   description = "The HCP Consul version"
-  default     = "v1.14.1"
+  default     = "v1.15.2"
 }
 
 variable "api_gateway_version" {
   type        = string
   description = "The Consul API gateway CRD version to use"
-  default     = "0.5.1"
+  default     = "0.5.4"
 }

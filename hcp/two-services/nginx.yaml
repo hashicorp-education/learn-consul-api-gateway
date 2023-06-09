@@ -10,6 +10,7 @@ spec:
   ports:
     - port: 80
       targetPort: 80
+      protocol: TCP
   selector:
     app: nginx
 ---
@@ -80,11 +81,13 @@ kind: ServiceDefaults
 metadata:
   name: nginx
 spec:
-  protocol: "http"
+  protocol: http
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    app: nginx
   name: nginx
 spec:
   replicas: 1
@@ -98,10 +101,9 @@ spec:
         service: nginx
         app: nginx
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9102"
-        consul.hashicorp.com/connect-inject: "true"
-        consul.hashicorp.com/connect-service-upstreams: "frontend:3000, public-api:8080"
+        'prometheus.io/scrape': 'true'
+        'prometheus.io/port': '9102'
+        'consul.hashicorp.com/connect-inject': 'true'
     spec:
       serviceAccountName: nginx
       containers:
