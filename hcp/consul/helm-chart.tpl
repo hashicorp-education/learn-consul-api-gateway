@@ -1,5 +1,5 @@
 global:
-  enabled: false
+  enabled: true
   name: consul
   datacenter: ${datacenter}
   image: "hashicorp/consul-enterprise:${consul_version}-ent"
@@ -30,14 +30,10 @@ connectInject:
     defaultEnabled: true
   enabled: true
   default: true
+  apiGateway:
+    #manageExternalCRDs: true
+    managedGatewayClass:
+      serviceType: LoadBalancer
   consulNode:
     meta:
       terraform-module: "hcp-eks-client"
-
-%{if api_gateway_version != "" }
-apiGateway:
-  enabled: true
-  image: "hashicorp/consul-api-gateway:${api_gateway_version}"
-  managedGatewayClass:
-    serviceType: LoadBalancer
-%{ endif }

@@ -5,11 +5,17 @@ metadata:
   name: api-gateway
   namespace: consul
 spec:
-  gatewayClassName: consul-api-gateway
+  gatewayClassName: consul
   listeners:
-  - protocol: HTTP
-    port: 80
+  - protocol: HTTP # options: HTTP or HTTPS
+    port: 80 # options: 80 or 443 or custom
     name: http
     allowedRoutes:
       namespaces:
-        from: All
+        from: All # options: All or Same or Specific
+    # tls:
+    #   certificateRefs:
+    #     - name: cert
+    #       namespace: secret-namespace
+    #       group: ""
+    #       kind: Secret
