@@ -7,15 +7,13 @@ Terraform will perform the following actions:
 - Peer VPC and HVN networks
 - Create HCP Consul cluster
 - Create EKS cluster
-- Deploy API GW CRDs to EKS
-- Deploy Consul + API GW controller to EKS
+- Deploy Consul + API GW to EKS
 
 You will perform these steps:
-- Deploy Hashicups & Echo services to EKS
-- Deploy remaining API GW resources (gateway.yaml & routes.yaml) to EKS
+- Deploy Hashicups to EKS
+- Deploy remaining API GW settings to EKS
 - Verify AWS Load Balancer is created once API GW is deployed
-- Verify access behavior with Hashicups via API GW
-- Verify load balancing behavior with Echo Servers via API GW
+- Verify access with Hashicups via API GW
 - Clean up environment
 
 ## Steps
