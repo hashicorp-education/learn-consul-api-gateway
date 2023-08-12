@@ -59,9 +59,10 @@ data:
           proxy_pass http://frontend:3000;
         }
 
-        location /api {
-          proxy_pass http://public-api:8080;
-        }
+        ## API functionality delivered by Consul API gateway
+        #location /api {
+        #  proxy_pass http://public-api:8080;
+        #}
 
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
