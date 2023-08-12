@@ -1,15 +1,13 @@
-# Consul API Gateway on EKS + HCP
+# Consul API Gateway on EKS
 
 ## Overview
 
 Terraform will perform the following actions:
-- Create VPC and HVN networks
-- Peer VPC and HVN networks
-- Create HCP Consul cluster
+- Create VPC
 - Create EKS cluster
-- Deploy Consul + API GW to EKS
 
 You will perform these steps:
+- Deploy a Consul cluster
 - Deploy Hashicups to EKS
 - Deploy remaining API GW settings to EKS
 - Verify AWS Load Balancer is created once API GW is deployed
@@ -23,8 +21,6 @@ You will perform these steps:
     ```shell
     export AWS_ACCESS_KEY_ID="YOUR_AWS_ACCESS_KEY"
     export AWS_SECRET_ACCESS_KEY="YOUR_AWS_SECRET_KEY"
-    export HCP_CLIENT_ID="YOUR_HCP_CLIENT_ID"
-    export HCP_CLIENT_SECRET="YOUR_HCP_SECRET"
     ```
 2. Run Terraform (resource creation will take 10-15 minutes to complete)
     1. `terraform init`
