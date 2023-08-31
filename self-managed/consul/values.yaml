@@ -2,7 +2,7 @@ global:
   enabled: true
   name: consul
   datacenter: dc1
-  image: "hashicorp/consul:${consul_version}"
+  image: "hashicorp/consul:1.16.0"
   acls:
     manageSystemACLs: true
   tls:

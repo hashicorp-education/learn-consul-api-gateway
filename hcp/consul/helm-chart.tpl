@@ -31,7 +31,6 @@ connectInject:
   enabled: true
   default: true
   apiGateway:
-    #manageExternalCRDs: true
     managedGatewayClass:
       serviceType: LoadBalancer
   consulNode:
