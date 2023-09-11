@@ -35,7 +35,6 @@ resource "local_file" "consul-helm-values" {
       cluster_id       = hcp_consul_cluster.main.datacenter,
       k8s_api_endpoint = module.eks.cluster_endpoint,
       consul_version   = substr(hcp_consul_cluster.main.consul_version, 1, -1),
-      api_gateway_version = var.api_gateway_version,
     }
   )
 }

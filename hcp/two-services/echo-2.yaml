@@ -3,6 +3,7 @@ apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceDefaults
 metadata:
   name: echo-2
+  namespace: default
 spec:
   protocol: http
 ---
@@ -12,12 +13,12 @@ metadata:
   labels:
     app: echo-2
   name: echo-2
+  namespace: default
 spec:
   ports:
-  - port: 8090
-    name: high
+  - port: 3000
     protocol: TCP
-    targetPort: 8080
+    targetPort: 3000
   selector:
     app: echo-2
 ---
@@ -25,6 +26,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: echo-2
+  namespace: default
 automountServiceAccountToken: true
 ---
 apiVersion: apps/v1
@@ -33,6 +35,7 @@ metadata:
   labels:
     app: echo-2
   name: echo-2
+  namespace: default
 spec:
   replicas: 1
   selector:
@@ -47,7 +50,18 @@ spec:
     spec:
       serviceAccountName: echo-2
       containers:
-      - image: gcr.io/kubernetes-e2e-test-images/echoserver:2.2
+      - image: k8s.gcr.io/ingressconformance/echoserver:v0.0.1
         name: echo-2
+        env:
+        - name: SERVICE_NAME
+          value: echo-2
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
         ports:
-        - containerPort: 8080
+        - containerPort: 3000

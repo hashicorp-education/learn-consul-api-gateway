@@ -1,11 +1,11 @@
 # Learn Consul - API Gateway
 
-This is a companion repo to the [Control Access into the Service Mesh with Consul API Gateway](https://developer.hashicorp.com/consul/tutorials/kubernetes/kubernetes-api-gateway), containing sample configuration to:
+This is a companion repository to the [Control Access into the Service Mesh with Consul API Gateway](https://developer.hashicorp.com/consul/tutorials/kubernetes/kubernetes-api-gateway), containing sample configuration to:
 
 - Set up a Consul server
-    - Cloud: HCP Consul and AWS EKS
-    - Self-Managed: Local `kind` Kubernetes cluster 
-- Deploy example applications HashiCups and echo server
+    - Cloud: HCP Consul and AWS EKS Kubernetes cluster
+    - Self-Managed: AWS EKS Kubernetes cluster 
+- Deploy example applications (HashiCups and echo)
 - Deploy Consul API Gateway
-- Explore Ingress into the service mesh with HashiCups
-- Explore Load Balancing with echo Ssrver
+- Apply API gateway routes to enable ingress to HashiCups
+- Apply API gateway routes to load balance echo services

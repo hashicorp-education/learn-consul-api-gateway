@@ -1,27 +1,14 @@
 ---
-apiVersion: gateway.networking.k8s.io/v1beta1
-kind: HTTPRoute
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
 metadata:
-  name: route-echo
-  namespace: default
+  name: api-gateway-hashicups
 spec:
-  parentRefs:
-  - name: api-gateway
-    namespace: consul
-  rules:
-  - matches:
-    - path:
-        type: PathPrefix
-        value: /echo
-    backendRefs:
-    - kind: Service
-      name: echo-1
-      port: 8080
-      weight: 50
-    - kind: Service
-      name: echo-2
-      port: 8090
-      weight: 50
+  destination:
+    name: nginx
+  sources:
+    - name: api-gateway
+      action: allow
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: HTTPRoute
@@ -56,11 +43,6 @@ spec:
     - path:
         type: Exact
         value: /hashicups
-    backendRefs:
-    - kind: Service
-      name: nginx
-      namespace: default
-      port: 80
     filters:
       - type: URLRewrite
         urlRewrite:

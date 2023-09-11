@@ -15,6 +15,12 @@ data "aws_eks_cluster_auth" "cluster" {
   name = module.eks.cluster_id
 }
 
+resource "random_string" "cluster_id" {
+  length  = 6
+  special = false
+  upper   = false
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "18.26.6"
@@ -46,7 +52,7 @@ module "eks" {
 
       min_size     = 1
       max_size     = 3
-      desired_size = 2
+      desired_size = 3
     }
   }
 
@@ -74,31 +80,6 @@ module "eks" {
       ipv6_cidr_blocks = ["::/0"]
     }
   }
-}
-
-resource "kubernetes_namespace" "consul" {
-  metadata {
-    name = "consul"
-  }
-
-  depends_on = [module.eks]
-}
-
-resource "kubernetes_secret" "consul_secrets" {
-  metadata {
-    name      = "${hcp_consul_cluster.main.datacenter}-hcp"
-    namespace = "consul"
-  }
-
-  data = {
-    caCert              = base64decode(hcp_consul_cluster.main.consul_ca_file)
-    gossipEncryptionKey = jsondecode(base64decode(hcp_consul_cluster.main.consul_config_file))["encrypt"]
-    bootstrapToken      = hcp_consul_cluster_root_token.token.secret_id
-  }
-
-  type = "Opaque"
-
-  depends_on = [module.eks]
 }
 
 # Uninstalls consul resources (API Gateway controller, Consul-UI, and AWS ELB, and removes associated AWS resources)
