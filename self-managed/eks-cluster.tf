@@ -48,7 +48,7 @@ module "eks" {
     one = {
       name = "apigw-node"
 
-      instance_types = ["t3a.medium"]
+      instance_types = ["t3.medium"]
 
       min_size     = 1
       max_size     = 3

@@ -1,0 +1,31 @@
+---
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: api-gateway-publicapi
+spec:
+  destination:
+    name: public-api
+  sources:
+    - name: api-gateway
+      action: allow
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: route-api
+  namespace: default
+spec:
+  parentRefs:
+  - name: api-gateway
+    namespace: consul
+  rules:
+  - matches:
+    - path:
+        type: Exact
+        value: /api
+    backendRefs:
+    - kind: Service
+      name: public-api
+      namespace: default
+      port: 8080

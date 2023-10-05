@@ -2,28 +2,6 @@
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: frontend
-spec:
-  destination:
-    name: frontend
-  sources:
-    - name: nginx
-      action: allow
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
-  name: public-api
-spec:
-  destination:
-    name: public-api
-  sources:
-    - name: nginx
-      action: allow
----
-apiVersion: consul.hashicorp.com/v1alpha1
-kind: ServiceIntentions
-metadata:
   name: product-api
 spec:
   destination:
