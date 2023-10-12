@@ -42,7 +42,7 @@ module "eks" {
     one = {
       name = "apigw-node"
 
-      instance_types = ["t3a.medium"]
+      instance_types = ["t3.medium"]
 
       min_size     = 1
       max_size     = 3
@@ -106,7 +106,8 @@ resource "kubernetes_secret" "consul_secrets" {
 resource "null_resource" "kubernetes_consul_resources" {
   provisioner "local-exec" {
     when    = destroy
-    command = "kubectl delete svc/consul-ui --namespace consul && kubectl delete svc/api-gateway --namespace consul"
+    # This command attempts to uninstall consul resources only if they are present
+    command = "kubectl get svc/consul-ui --namespace consul && kubectl delete svc/consul-ui --namespace consul || true; kubectl get svc/api-gateway --namespace consul && kubectl delete svc/api-gateway --namespace consul || true"
   }
   depends_on = [module.eks]
 }

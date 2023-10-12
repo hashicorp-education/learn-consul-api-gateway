@@ -37,5 +37,5 @@ variable "consul_tier" {
 variable "consul_version" {
   type        = string
   description = "The HCP Consul version"
-  default     = "v1.16.0"
+  default     = "v1.16.2"
 }
